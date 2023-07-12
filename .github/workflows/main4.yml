@@ -1,0 +1,31 @@
+name: Python application test with Github Actions
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        python-version: ["3.8", "3.9", "3.10"]
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+      - name: Run a script
+        run: python your_script.py > output-${{ matrix.python-version }}.txt
+      - name: Archive output artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: output-${{ matrix.python-version }}
+          path: output-${{ matrix.python-version }}.txt
+          retention-days: 5
