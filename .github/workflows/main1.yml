@@ -1,0 +1,29 @@
+name: Python Version and Upload
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Set up Python 3.8
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
+
+    - name: Generate version info
+      run: |
+        python your_script.py > python_version.txt
+
+    - name: Upload Python version info
+      uses: actions/upload-artifact@v3
+      with:
+        name: python-version-info
+        path: python_version.txt
+
